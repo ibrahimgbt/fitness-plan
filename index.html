@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kişisel Fitness Planı</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#0d0d0f;color:#f0f0f2;min-height:100vh;padding-bottom:60px}
+.header{background:linear-gradient(160deg,#1c1c1f,#0d0d0f);border-bottom:1px solid #2a2a2e;padding:22px 20px 16px}
+.header-inner{max-width:700px;margin:0 auto}
+.header-top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.header-icon{background:#e85d3a;border-radius:12px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;letter-spacing:.5px;line-height:1}
+.header-sub{color:#8a8a9a;font-size:12px;margin-top:3px}
+.macros{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.macro-card{background:#1e1e21;border:1px solid #2a2a2e;border-radius:10px;padding:10px 8px;text-align:center}
+.macro-val{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800}
+.macro-label{font-size:11px;font-weight:600;margin-top:2px}
+.macro-unit{color:#8a8a9a;font-size:10px}
+.container{max-width:700px;margin:0 auto;padding:0 20px}
+.tabs{display:flex;gap:5px;padding:12px 0;border-bottom:1px solid #2a2a2e;flex-wrap:wrap}
+.tab-btn{background:#1e1e21;color:#8a8a9a;border:1px solid #2a2a2e;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.tab-btn.active{background:#e85d3a;color:#fff;border-color:#e85d3a}
+.section{display:none;margin-top:16px}
+.section.active{display:block}
+.week-label{color:#8a8a9a;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;margin-top:16px}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px}
+.day-card{border-radius:10px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.day-card.rest{background:#1e1e21;border-color:#2a2a2e;cursor:default}
+.day-card .day-name{font-size:10px;font-weight:700;margin-bottom:4px}
+.day-card .day-icon{font-size:18px}
+.day-card .day-label{font-size:9px;color:#8a8a9a;margin-top:4px;line-height:1.3}
+.workout-detail{background:#1e1e21;border-radius:14px;padding:16px;margin-bottom:20px}
+.workout-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.workout-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800}
+.workout-sub{color:#8a8a9a;font-size:12px}
+.close-btn{margin-left:auto;background:none;border:none;color:#8a8a9a;font-size:20px;cursor:pointer}
+.exercise-card{border-radius:10px;margin-bottom:8px;overflow:hidden}
+.exercise-header{padding:12px 14px;cursor:pointer;background:#161618}
+.exercise-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.exercise-name{font-weight:600;font-size:14px;flex:1}
+.exercise-badges{display:flex;gap:5px;flex-shrink:0;align-items:center}
+.badge-sets{border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700}
+.badge-rest{background:#1e1e21;color:#8a8a9a;border-radius:6px;padding:2px 8px;font-size:11px}
+.badge-arrow{color:#8a8a9a;font-size:13px}
+.exercise-note{color:#8a8a9a;font-size:12px;margin-top:5px;line-height:1.5}
+.exercise-body{border-top:1px solid #2a2a2e;display:none}
+.exercise-body.open{display:block}
+.gif-container{background:#111;display:flex;align-items:center;justify-content:center;min-height:200px;padding:10px}
+.gif-container img{max-width:100%;max-height:280px;object-fit:contain;border-radius:8px}
+.exercise-info{padding:12px 14px;background:#161618}
+.muscle-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.muscle-tag{border-radius:20px;padding:2px 10px;font-size:11px}
+.workout-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.workout-card{border-radius:12px;padding:16px;cursor:pointer;transition:all .15s;border:1px solid #2a2a2e;background:#1e1e21}
+.workout-card-icon{font-size:28px;margin-bottom:8px}
+.workout-card-day{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700}
+.workout-card-focus{font-size:14px;font-weight:600;margin-top:2px}
+.workout-card-sub{color:#8a8a9a;font-size:11px;margin-top:6px}
+/* Nutrition */
+.sub-tabs{display:flex;gap:6px;margin-bottom:14px}
+.sub-tab{background:#1e1e21;color:#8a8a9a;border:1px solid #2a2a2e;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.sub-tab.active{background:#e85d3a;color:#fff;border-color:#e85d3a}
+.daily-summary{background:#1e1e21;border:1px solid #2a2a2e;border-radius:12px;padding:12px 16px;margin-bottom:14px;display:flex;justify-content:space-around}
+.summary-val{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;display:block;text-align:center}
+.summary-label{color:#8a8a9a;font-size:11px;display:block;text-align:center}
+.meal-card{background:#1e1e21;border:1px solid #2a2a2e;border-radius:12px;padding:14px;margin-bottom:10px}
+.meal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.meal-left{display:flex;align-items:center;gap:10px}
+.meal-icon{font-size:24px}
+.meal-name{font-weight:600;font-size:14px}
+.meal-time{color:#8a8a9a;font-size:12px}
+.meal-right{text-align:right}
+.meal-kcal{font-weight:700;font-size:13px;color:#e85d3a}
+.meal-protein{font-size:12px;color:#3a7de8}
+.meal-foods{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0}
+.food-tag{background:#161618;border:1px solid #2a2a2e;border-radius:20px;padding:3px 10px;font-size:12px}
+.meal-tip{color:#8a8a9a;font-size:12px;border-top:1px solid #2a2a2e;padding-top:8px;line-height:1.5;margin-top:10px}
+/* Supplements */
+.supp-warning{background:rgba(232,93,58,.1);border:1px solid rgba(232,93,58,.3);border-radius:12px;padding:14px;margin-bottom:18px}
+.supp-warning-title{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:#e85d3a;margin-bottom:6px}
+.priority-legend{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.priority-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:4px}
+.priority-label{font-size:12px;color:#8a8a9a}
+.supp-card{background:#1e1e21;border:1px solid #2a2a2e;border-radius:12px;margin-bottom:10px;overflow:hidden}
+.supp-header{padding:16px;cursor:pointer}
+.supp-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.supp-icon{font-size:26px}
+.supp-name{font-weight:700;font-size:15px}
+.supp-priority{border-radius:6px;padding:1px 8px;font-size:11px;font-weight:600}
+.supp-timing{color:#8a8a9a;font-size:12px;margin-top:2px}
+.supp-why{color:#8a8a9a;font-size:13px;line-height:1.5}
+.supp-body{border-top:1px solid #2a2a2e;padding:14px 16px;display:none}
+.supp-body.open{display:block}
+.supp-tip{background:rgba(58,125,232,.08);border:1px solid rgba(58,125,232,.2);border-radius:8px;padding:10px;margin-bottom:14px;font-size:12px;color:#f0f0f2;line-height:1.6}
+.brands-label{color:#8a8a9a;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px}
+.brand-card{background:#161618;border:1px solid #2a2a2e;border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.brand-name{font-weight:600;font-size:13px}
+.brand-note{color:#8a8a9a;font-size:12px;margin-top:3px}
+.brand-price{background:rgba(58,232,125,.1);color:#3ae87d;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:600;flex-shrink:0}
+.stack-summary{background:#1e1e21;border:1px solid #2a2a2e;border-radius:12px;padding:16px;margin-top:6px}
+.stack-title{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;margin-bottom:12px}
+.stack-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #2a2a2e}
+.stack-row:last-child{border-bottom:none}
+.stack-phase{font-weight:600;font-size:13px}
+.stack-items{color:#8a8a9a;font-size:12px}
+.stack-cost{color:#3ae87d;font-size:12px;font-weight:700;flex-shrink:0;margin-left:10px}
+/* Tips */
+.alert-box{background:rgba(232,93,58,.1);border:1px solid rgba(232,93,58,.3);border-radius:12px;padding:16px;margin-bottom:20px}
+.alert-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;color:#e85d3a;margin-bottom:6px}
+.tip-card{background:#1e1e21;border:1px solid #2a2a2e;border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:12px}
+.tip-icon{font-size:26px;flex-shrink:0}
+.tip-title{font-weight:700;font-size:14px;margin-bottom:4px}
+.tip-text{color:#8a8a9a;font-size:13px;line-height:1.6}
+.roadmap{margin-top:22px}
+.roadmap-item{display:flex;gap:14px;margin-bottom:14px}
+.roadmap-line{display:flex;flex-direction:column;align-items:center}
+.roadmap-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.roadmap-connector{width:2px;background:#2a2a2e;flex:1;margin-top:4px}
+.roadmap-phase{font-weight:700;font-size:13px}
+.roadmap-badge{border-radius:6px;padding:1px 8px;font-size:11px;font-weight:600;margin-left:8px}
+.roadmap-desc{color:#8a8a9a;font-size:13px;line-height:1.6;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-top">
+      <div class="header-icon">💪</div>
+      <div>
+        <div class="header-title">KİŞİSEL FİTNES PLANI</div>
+        <div class="header-sub">30 yaş · 184 cm · 84 kg · Ara Seviye Geri Dönüş · Kas & Güç</div>
+      </div>
+    </div>
+    <div class="macros">
+      <div class="macro-card"><div class="macro-val" style="color:#e85d3a">2.550</div><div class="macro-label">Kalori</div><div class="macro-unit">kcal/gün</div></div>
+      <div class="macro-card"><div class="macro-val" style="color:#3a7de8">170g</div><div class="macro-label">Protein</div><div class="macro-unit">günlük</div></div>
+      <div class="macro-card"><div class="macro-val" style="color:#3ae87d">270g</div><div class="macro-label">Karb</div><div class="macro-unit">günlük</div></div>
+      <div class="macro-card"><div class="macro-val" style="color:#e8c33a">75g</div><div class="macro-label">Yağ</div><div class="macro-unit">günlük</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('program')">🏋️ Antrenman</button>
+    <button class="tab-btn" onclick="showTab('nutrition')">🍽️ Beslenme</button>
+    <button class="tab-btn" onclick="showTab('supplements')">💊 Takviye</button>
+    <button class="tab-btn" onclick="showTab('tips')">📋 İpuçları</button>
+  </div>
+
+  <!-- ANTRENMAN -->
+
+  <div id="program" class="section active">
+    <div class="week-label">Haftalık Program</div>
+    <div class="week-grid" id="weekGrid"></div>
+    <div id="workoutDetail" style="display:none"></div>
+    <div class="week-label">Tüm Antrenmanlar</div>
+    <div class="workout-cards" id="workoutCards"></div>
+  </div>
+
+  <!-- BESLENME -->
+
+  <div id="nutrition" class="section">
+    <div class="sub-tabs" style="margin-top:4px">
+      <button class="sub-tab active" onclick="showMeal('weekday',this)">📅 Hafta İçi</button>
+      <button class="sub-tab" onclick="showMeal('weekend',this)">🏠 Hafta Sonu</button>
+    </div>
+    <div id="mealContent"></div>
+  </div>
+
+  <!-- TAKVİYE -->
+
+  <div id="supplements" class="section">
+    <div class="supp-warning">
+      <div class="supp-warning-title">⚠️ ALTIN KURAL</div>
+      <div style="font-size:13px;line-height:1.7;color:#f0f0f2">Takviyeler <strong>ek</strong>tir, temel değil. Beslenme ve antrenman olmadan hiçbir takviye işe yaramaz.</div>
+    </div>
+    <div class="priority-legend">
+      <span><span class="priority-dot" style="background:#e85d3a"></span><span class="priority-label">Zorunlu</span></span>
+      <span><span class="priority-dot" style="background:#e8c33a"></span><span class="priority-label">Çok Önerilen</span></span>
+      <span><span class="priority-dot" style="background:#3a7de8"></span><span class="priority-label">Önerilen</span></span>
+      <span><span class="priority-dot" style="background:#8a8a9a"></span><span class="priority-label">Opsiyonel</span></span>
+    </div>
+    <div id="suppList"></div>
+  </div>
+
+  <!-- İPUÇLARI -->
+
+  <div id="tips" class="section">
+    <div class="alert-box">
+      <div class="alert-title">⚡ KAS HAFIZASI DEVREDe</div>
+      <div style="font-size:13px;line-height:1.7;color:#f0f0f2">6-12 ay ara verdin ama vücudun her şeyi hatırlıyor. İlk 4-6 haftada çok daha hızlı ilerleme görürsün. <strong>Form önce, ağırlık sonra.</strong></div>
+    </div>
+    <div id="tipsList"></div>
+    <div class="roadmap">
+      <div class="week-label">Yol Haritası</div>
+      <div id="roadmapList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const WORKOUTS = [
+  {
+    id:1, day:"Gün 1", focus:"Göğüs & Triceps", icon:"💪", color:"#e85d3a",
+    exercises:[
+      {name:"Dumbbell Floor Press", sets:"4", reps:"8-10", rest:"90sn", note:"Sırtı yere yasla, dumbelları göğüs hizasında tut, dirsek 45° açıda.", muscles:["Göğüs","Ön Omuz","Triceps"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/04/Dumbbell-Floor-Press.gif"},
+      {name:"Dumbbell Floor Flye", sets:"3", reps:"12", rest:"60sn", note:"Hafif ark yap, göğsü tam aç. Ağırlıkları kontrollü indir.", muscles:["Göğüs","Ön Omuz"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Floor-Fly.gif"},
+      {name:"Push-Up (Dar Tutuş)", sets:"3", reps:"12-15", rest:"60sn", note:"Dirsekler vücuda yapışık kalmalı. Gövde düz bir plank gibi.", muscles:["Triceps","Göğüs"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Close-Grip-Push-Up.gif"},
+      {name:"Overhead Triceps Extension", sets:"3", reps:"12", rest:"60sn", note:"Tek dumbbell, her iki elle tut, sadece ön kolu hareket ettir.", muscles:["Triceps"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Triceps-Extension.gif"},
+      {name:"Triceps Pushdown (Bant)", sets:"3", reps:"15", rest:"45sn", note:"Bandı kapıya sabitle, dirsekleri kilitle.", muscles:["Triceps"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Resistance-Band-Tricep-Pushdown.gif"},
+    ]
+  },
+  {
+    id:2, day:"Gün 2", focus:"Sırt & Biceps", icon:"🏋️", color:"#3a7de8",
+    exercises:[
+      {name:"Tek Kol Dumbbell Row", sets:"4", reps:"10", rest:"75sn", note:"Sandalyeye dayan, sırt düz, kürek kemiğini sık ve 1sn tut.", muscles:["Sırt","Biceps","Arka Omuz"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif"},
+      {name:"Dumbbell Romanian Deadlift", sets:"3", reps:"10", rest:"90sn", note:"Bel düz, kalçayı geri it. Hamstringte gerilim hissedene kadar in.", muscles:["Hamstring","Kalça","Alt Sırt"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif"},
+      {name:"Face Pull (Bant)", sets:"3", reps:"15", rest:"45sn", note:"Bandı göz hizasına sabitle. Elleri kulak hizasına çek.", muscles:["Arka Omuz","Üst Sırt"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Resistance-Band-Face-Pull.gif"},
+      {name:"Dumbbell Biceps Curl", sets:"3", reps:"12", rest:"60sn", note:"Dirsekler sabit, sallanma yok, üstte 1sn sık.", muscles:["Biceps"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Curl.gif"},
+      {name:"Hammer Curl", sets:"3", reps:"10", rest:"60sn", note:"Başparmak yukarı (nötr tutuş). Brachialis ve önkolu güçlendirir.", muscles:["Biceps","Brachialis","Önkol"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Hammer-Curl.gif"},
+      {name:"Band Pull-Apart", sets:"3", reps:"15", rest:"45sn", note:"Bandı omuz genişliğinde tut, kollar düz, yavaşça iki yana aç.", muscles:["Arka Omuz","Üst Sırt"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Resistance-Band-Pull-Apart.gif"},
+    ]
+  },
+  {
+    id:3, day:"Gün 3", focus:"Bacak & Core", icon:"🦵", color:"#3ae87d",
+    exercises:[
+      {name:"Goblet Squat", sets:"4", reps:"12", rest:"90sn", note:"Tek dumbbell göğüste dik tut. Diz parmak ucunun önüne geçmesin.", muscles:["Quadriceps","Kalça","Core"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif"},
+      {name:"Romanian Deadlift", sets:"4", reps:"10", rest:"90sn", note:"Hamstring odaklı, yavaş in, baldırın arkasında gerilim hisset.", muscles:["Hamstring","Kalça"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif"},
+      {name:"Reverse Lunge", sets:"3", reps:"10/bacak", rest:"75sn", note:"Arkaya adım at, ön diz 90°. Diz yere değmeden dur.", muscles:["Quadriceps","Hamstring","Kalça"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Reverse-Lunge.gif"},
+      {name:"Calf Raise", sets:"4", reps:"15", rest:"45sn", note:"Yavaş in, üstte 2sn tut. Hızlı yaparsan etkisi düşer.", muscles:["Baldır"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif"},
+      {name:"Plank", sets:"3", reps:"45sn", rest:"45sn", note:"Kalça düz, nefes al. Gözler yere baksın.", muscles:["Core","Karın"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Plank.gif"},
+      {name:"Leg Raise", sets:"3", reps:"15", rest:"45sn", note:"Beli yere bastır, bacakları tam indirme.", muscles:["Alt Karın"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Leg-Raise.gif"},
+    ]
+  },
+  {
+    id:4, day:"Gün 4", focus:"Omuz & Full Body", icon:"🎯", color:"#e8c33a",
+    exercises:[
+      {name:"Dumbbell Shoulder Press", sets:"4", reps:"10", rest:"90sn", note:"Sırt destekli otur, beli aşırı sıkıştırma.", muscles:["Ön Omuz","Yan Omuz","Triceps"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif"},
+      {name:"Lateral Raise", sets:"3", reps:"15", rest:"60sn", note:"Hafif ağırlık, tam açılım, dirsek hafif kırık.", muscles:["Yan Omuz"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif"},
+      {name:"Front Raise", sets:"3", reps:"12", rest:"60sn", note:"Omuz hizasında dur, sallanma yok.", muscles:["Ön Omuz"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Front-Raise.gif"},
+      {name:"External Rotation (Bant)", sets:"3", reps:"15", rest:"45sn", note:"Rotator cuff için kritik. Küçük yavaş hareket.", muscles:["Rotator Cuff"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Resistance-Band-External-Rotation.gif"},
+      {name:"Burpee", sets:"3", reps:"10", rest:"60sn", note:"Full body kondisyon. Tempo serbest.", muscles:["Tüm Vücut"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Burpee.gif"},
+      {name:"Mountain Climber", sets:"3", reps:"20/bacak", rest:"45sn", note:"Hızlı tempo, core sıkı. Kalça aşağıda.", muscles:["Core","Cardio"], gif:"https://fitnessprogramer.com/wp-content/uploads/2021/02/Mountain-Climber.gif"},
+    ]
+  }
+];
+
+const WEEK = [
+  {day:"Pzt", type:"workout", label:"Göğüs & Tri", wid:1},
+  {day:"Sal", type:"rest", label:"Dinlenme"},
+  {day:"Çar", type:"workout", label:"Sırt & Bi", wid:2},
+  {day:"Per", type:"rest", label:"Dinlenme"},
+  {day:"Cum", type:"workout", label:"Bacak & Core", wid:3},
+  {day:"Cmt", type:"workout", label:"Omuz & Full", wid:4},
+  {day:"Paz", type:"rest", label:"Dinlenme"},
+];
+
+const MEALS_WEEKDAY = [
+  {time:"07:00", label:"Uyanış", icon:"☀️", foods:["1 bardak su","Sade kahve (isteğe bağlı)"], kcal:5, protein:0, tip:"Antrenman yoksa kahvaltıya kadar bekleyebilirsin"},
+  {time:"09:00", label:"Kahvaltı (İş Yeri)", icon:"🍳", foods:["3 haşlanmış yumurta","60g beyaz peynir","2 dilim tam tahıllı ekmek","Domates + salatalık"], kcal:520, protein:38, tip:"Yumurtaları akşamdan haşlayıp getir — çok pratik"},
+  {time:"12:30", label:"Öğle (İş Yeri)", icon:"🥗", foods:["Tavuk/balık/köfte 150-200g","Pilav veya bulgur","Bol salata","200g yoğurt"], kcal:700, protein:52, tip:"Yemekhanede en fazla protein içeren ana yemeği seç"},
+  {time:"15:30", label:"Ara Öğün", icon:"🥜", foods:["200g süzme yoğurt","1 avuç badem/fındık (30g)","1 muz veya elma"], kcal:380, protein:20, tip:"İş yerinde kolayca hazırlanabilir, tok tutar"},
+  {time:"18:00", label:"Antrenman Öncesi", icon:"⚡", foods:["1 muz","1 dilim ekmek + kaşar peynir"], kcal:200, protein:8, tip:"Antrenmandan 30-45dk önce ye, hafif tut"},
+  {time:"19:30", label:"Akşam (Ant. Sonrası)", icon:"🍽️", foods:["Tavuk/balık 200g","Bulgur veya makarna","Zeytinyağlı sebze","Yoğurt veya ayran"], kcal:650, protein:48, tip:"Antrenman sonrası en önemli öğün"},
+  {time:"21:30", label:"Gece", icon:"🌙", foods:["200g süzme yoğurt","Tarçın + 1 tatlı kaşığı bal"], kcal:150, protein:18, tip:"Yavaş sindirilen protein — kas onarımı için ideal"},
+];
+
+const MEALS_WEEKEND = [
+  {time:"08:30", label:"Kahvaltı (Evde)", icon:"🍳", foods:["4 yumurta","80g beyaz peynir","Domates, salatalık, biber","2 dilim tam tahıllı ekmek","Zeytin"], kcal:620, protein:45, tip:""},
+  {time:"12:00", label:"Öğle", icon:"🥘", foods:["Ev yapımı köfte veya tavuk 200g","Pilav veya makarna","Salata veya sebze","Yoğurt"], kcal:700, protein:50, tip:"Evde pişirdiğinde ölçüleri kontrol edebilirsin"},
+  {time:"15:30", label:"Ara Öğün", icon:"🍎", foods:["200g yoğurt","Meyve (muz, elma, portakal)","Bir avuç kuruyemiş"], kcal:350, protein:18, tip:""},
+  {time:"19:00", label:"Akşam", icon:"🍽️", foods:["Balık VEYA köfte","Sebze yemeği zeytinyağlı","Bulgur veya pilav","Yoğurt veya cacık"], kcal:680, protein:50, tip:"Hafta sonu balık için ideal gün"},
+];
+
+const SUPPLEMENTS = [
+  {name:"Whey Protein", icon:"🥛", priority:"Zorunlu", pColor:"#e85d3a", timing:"Antrenman sonrası 30dk + sabah", dose:"25-30g / kullanım", why:"170g protein hedefine ulaşmak için en pratik yol.", tip:"Suyla karıştır — daha hızlı emilir.", brands:[{name:"HIQ Hi Pro+",origin:"🇹🇷",note:"Zaten aldın — Volac CFM ham madde",price:"~2.049₺/2kg"},{name:"Optimum Nutrition Gold Standard",origin:"🇺🇸",note:"Sektör standardı",price:"~2.690₺/908g"}]},
+  {name:"Kreatin Monohidrat", icon:"⚡", priority:"Çok Önerilen", pColor:"#e8c33a", timing:"Her gün (antrenman sonrası / öğle ile)", dose:"5g / gün", why:"Güç ve performansı %5-15 artırır. En kanıtlı takviye.", tip:"HIQ Kreatin zaten aldın. Her gün 5g, yükleme gerekmez.", brands:[{name:"HIQ Creatine 300g",origin:"🇹🇷",note:"Zaten aldın",price:"~424₺"}]},
+  {name:"D3 + K2 Vitamini", icon:"☀️", priority:"Zorunlu", pColor:"#e85d3a", timing:"Sabah kahvaltıyla birlikte", dose:"4 damla (~4000 IU) / gün", why:"Masa başı + Ankara kışı = eksiklik neredeyse garantili.", tip:"Vitafenix D3K2 Damla aldın. Yağlı yemekle al.", brands:[{name:"Vitafenix D3+K2 Damla",origin:"🇹🇷 Amazon",note:"Zaten aldın — GMP sertifikalı",price:"Amazon'dan alındı"}]},
+  {name:"Omega-3 Balık Yağı", icon:"🐟", priority:"Önerilen", pColor:"#3a7de8", timing:"Akşam yemeğiyle 2 kapsül", dose:"2 kapsül / gün (435mg EPA + 290mg DHA × 2)", why:"Eklem sağlığı, iltihaplanma azaltma, kalp sağlığı.", tip:"Sorvagen IFOS 5 yıldız aldın — en iyi seçim.", brands:[{name:"Sorvagen Omega-3 Plus 1200mg",origin:"🇳🇴 Amazon",note:"Zaten aldın — IFOS 5★ Trigliserid",price:"619₺/60 kapsül"}]},
+  {name:"Magnezyum + Çinko + B6 (ZMA)", icon:"🌙", priority:"Önerilen", pColor:"#3a7de8", timing:"Uyumadan 30-45dk önce, mide boşken", dose:"3 kapsül / gece", why:"Uyku kalitesi, kas gevşemesi, testosteron desteği.", tip:"BigJoy ZMA Bisglisinat aldın — bisglisinat en iyi form. 3 kapsül yeterli, 4 almana gerek yok.", brands:[{name:"BigJoy ZMA Bisglisinat",origin:"🇹🇷",note:"Zaten aldın — bisglisinat form ✅",price:"Alındı"}]},
+];
+
+const TIPS = [
+  {icon:"💧", title:"Su", text:"Günde minimum 3 litre. Masana büyük şişe koy, şişe bitince doldur."},
+  {icon:"😴", title:"Uyku", text:"7-8 saat şart. Kas uyku sırasında büyür — antrenman kadar kritik."},
+  {icon:"📈", title:"Progressive Overload", text:"Her 2 haftada bir ağırlığı artır ya da tekrar sayısını yükselt. Zorluk hissetmiyorsan gelişmiyorsundur."},
+  {icon:"🔄", title:"Isınma", text:"Her antrenmandan önce 5dk eklem hareketleri, sonra hafif esneme."},
+  {icon:"📊", title:"Takip Et", text:"Her hafta aynı gün sabah tartıl. Aylık fotoğraf çek — aynı kıyafetle, aynı ışıkta."},
+  {icon:"⚖️", title:"Gerçekçi Beklenti", text:"Ayda 1-1.5kg kas kütlesi artışı gerçekçi hedef. Teraziye değil aynaya bak."},
+];
+
+const ROADMAP = [
+  {phase:"1-4. Hafta", color:"#3ae87d", label:"Alışma & Form", desc:"Egzersizleri öğren, hafif ağırlıkla başla. Ağırlık artışı ikincil."},
+  {phase:"5-8. Hafta", color:"#3a7de8", label:"Yüklenme", desc:"Ağırlıkları kademeli artır. Progressive overload devreye giriyor."},
+  {phase:"9-12. Hafta", color:"#e85d3a", label:"Gelişim", desc:"Bu noktada aynada fark var."},
+  {phase:"3. Ay+", color:"#e8c33a", label:"Optimizasyon", desc:"Programı kişiselleştir, zayıf noktaları güçlendir."},
+];
+
+let activeWorkoutId = null;
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function buildWeekGrid() {
+  const grid = document.getElementById('weekGrid');
+  WEEK.forEach(d => {
+    const w = d.wid ? WORKOUTS.find(x => x.id === d.wid) : null;
+    const div = document.createElement('div');
+    div.className = 'day-card' + (w ? '' : ' rest');
+    if (w) {
+      div.style.background = w.color + '18';
+      div.style.borderColor = w.color + '55';
+      div.onclick = () => toggleWorkout(w.id);
+      div.id = 'day-' + w.id;
+    }
+    div.innerHTML = `<div class="day-name" style="color:${w ? w.color : '#8a8a9a'}">${d.day}</div><div class="day-icon">${w ? w.icon : '😴'}</div><div class="day-label">${d.label}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function buildWorkoutCards() {
+  const cards = document.getElementById('workoutCards');
+  WORKOUTS.forEach(w => {
+    const div = document.createElement('div');
+    div.className = 'workout-card';
+    div.id = 'card-' + w.id;
+    div.innerHTML = `<div class="workout-card-icon">${w.icon}</div><div class="workout-card-day" style="color:${w.color}">${w.day}</div><div class="workout-card-focus">${w.focus}</div><div class="workout-card-sub">${w.exercises.length} egzersiz · Tıkla</div>`;
+    div.onclick = () => toggleWorkout(w.id);
+    cards.appendChild(div);
+  });
+}
+
+function toggleWorkout(id) {
+  const detail = document.getElementById('workoutDetail');
+  if (activeWorkoutId === id) {
+    activeWorkoutId = null;
+    detail.style.display = 'none';
+    detail.innerHTML = '';
+    resetCards();
+    return;
+  }
+  activeWorkoutId = id;
+  const w = WORKOUTS.find(x => x.id === id);
+  resetCards();
+  // Highlight active
+  const card = document.getElementById('card-' + id);
+  if (card) { card.style.background = w.color + '22'; card.style.borderColor = w.color; }
+  const dayCard = document.getElementById('day-' + id);
+  if (dayCard) { dayCard.style.background = w.color + '33'; dayCard.style.borderColor = w.color; }
+
+  detail.style.display = 'block';
+  detail.innerHTML = `
+    <div class="workout-detail" style="border:1px solid ${w.color}55">
+      <div class="workout-header">
+        <span style="font-size:28px">${w.icon}</span>
+        <div>
+          <div class="workout-title" style="color:${w.color}">${w.focus}</div>
+          <div class="workout-sub">${w.exercises.length} egzersiz · ~45-55 dk · GIF için egzersize tıkla ▼</div>
+        </div>
+        <button class="close-btn" onclick="toggleWorkout(${id})">✕</button>
+      </div>
+      ${w.exercises.map((ex, i) => buildExerciseCard(ex, w.color, id + '_' + i)).join('')}
+    </div>
+  `;
+  detail.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function resetCards() {
+  WORKOUTS.forEach(w => {
+    const card = document.getElementById('card-' + w.id);
+    if (card) { card.style.background = '#1e1e21'; card.style.borderColor = '#2a2a2e'; }
+    const dayCard = document.getElementById('day-' + w.id);
+    if (dayCard) { dayCard.style.background = w.color + '18'; dayCard.style.borderColor = w.color + '55'; }
+  });
+}
+
+function buildExerciseCard(ex, color, uid) {
+  return `
+    <div class="exercise-card" style="border-left:3px solid ${color}">
+      <div class="exercise-header" onclick="toggleExercise('${uid}')">
+        <div class="exercise-top">
+          <div class="exercise-name">${ex.name}</div>
+          <div class="exercise-badges">
+            <span class="badge-sets" style="background:${color}30;color:${color}">${ex.sets}×${ex.reps}</span>
+            <span class="badge-rest">${ex.rest}</span>
+            <span class="badge-arrow" id="arrow-${uid}">▼</span>
+          </div>
+        </div>
+        <div class="exercise-note" id="note-preview-${uid}">💡 ${ex.note}</div>
+      </div>
+      <div class="exercise-body" id="body-${uid}">
+        <div class="gif-container">
+          <img src="${ex.gif}" alt="${ex.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=color:#8a8a9a;text-align:center;padding:20px>🏋️<br><br>${ex.name}</div>'">
+        </div>
+        <div class="exercise-info">
+          <div class="muscle-tags">${ex.muscles.map(m => `<span class="muscle-tag" style="background:${color}20;color:${color}">${m}</span>`).join('')}</div>
+          <div class="exercise-note">💡 ${ex.note}</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function toggleExercise(uid) {
+  const body = document.getElementById('body-' + uid);
+  const arrow = document.getElementById('arrow-' + uid);
+  const notePreview = document.getElementById('note-preview-' + uid);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  arrow.textContent = isOpen ? '▼' : '▲';
+  notePreview.style.display = isOpen ? 'block' : 'none';
+}
+
+function showMeal(type, btn) {
+  document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const meals = type === 'weekday' ? MEALS_WEEKDAY : MEALS_WEEKEND;
+  const totalKcal = meals.reduce((s,m) => s+m.kcal, 0);
+  const totalProt = meals.reduce((s,m) => s+m.protein, 0);
+  let html = '';
+  if (type === 'weekday') {
+    html += `<div class="daily-summary"><div><span class="summary-val" style="color:#e85d3a">${totalKcal}</span><span class="summary-label">kcal / gün</span></div><div><span class="summary-val" style="color:#3a7de8">${totalProt}g</span><span class="summary-label">protein / gün</span></div><div><span class="summary-val" style="color:#3ae87d">${meals.length}</span><span class="summary-label">öğün / gün</span></div></div>`;
+  }
+  meals.forEach(m => {
+    html += `<div class="meal-card"><div class="meal-top"><div class="meal-left"><span class="meal-icon">${m.icon}</span><div><div class="meal-name">${m.label}</div><div class="meal-time">${m.time}</div></div></div>${m.kcal>0?`<div class="meal-right"><div class="meal-kcal">${m.kcal} kcal</div><div class="meal-protein">${m.protein}g protein</div></div>`:''}</div><div class="meal-foods">${m.foods.map(f=>`<span class="food-tag">${f}</span>`).join('')}</div>${m.tip?`<div class="meal-tip">💡 ${m.tip}</div>`:''}</div>`;
+  });
+  document.getElementById('mealContent').innerHTML = html;
+}
+
+function buildSupplements() {
+  const list = document.getElementById('suppList');
+  SUPPLEMENTS.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'supp-card';
+    div.innerHTML = `
+      <div class="supp-header" onclick="toggleSupp(${i})">
+        <div class="supp-top">
+          <span class="supp-icon">${s.icon}</span>
+          <div style="flex:1">
+            <span class="supp-name">${s.name}</span>
+            <span class="supp-priority" style="background:${s.pColor}25;color:${s.pColor};margin-left:8px">${s.priority}</span>
+            <div class="supp-timing">📍 ${s.timing} · ${s.dose}</div>
+          </div>
+          <span id="sarrow-${i}" style="color:#8a8a9a">▼</span>
+        </div>
+        <div class="supp-why">${s.why}</div>
+      </div>
+      <div class="supp-body" id="supp-${i}">
+        <div class="supp-tip">💡 <strong>Kullanım:</strong> ${s.tip}</div>
+        <div class="brands-label">Marka Önerileri</div>
+        ${s.brands.map(b=>`<div class="brand-card"><div><div class="brand-name">${b.origin} ${b.name}</div><div class="brand-note">${b.note}</div></div><span class="brand-price">${b.price}</span></div>`).join('')}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+
+  list.innerHTML += `
+    <div class="stack-summary">
+      <div class="stack-title">🧮 MEVCUT STACKİN</div>
+      <div class="stack-row"><div><div class="stack-phase">✅ Tamamlandı</div><div class="stack-items">HIQ Whey + HIQ Kreatin + Vitafenix D3K2 + Sorvagen Omega-3 + BigJoy ZMA</div></div><div class="stack-cost">Hazır!</div></div>
+      <div class="stack-row"><div><div class="stack-phase">3. Ay+</div><div class="stack-items">Kan tahlili sonrası gerekirse ek takviye</div></div><div class="stack-cost">Değerlendir</div></div>
+    </div>
+  `;
+}
+
+function toggleSupp(i) {
+  const body = document.getElementById('supp-' + i);
+  const arrow = document.getElementById('sarrow-' + i);
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function buildTips() {
+  const list = document.getElementById('tipsList');
+  TIPS.forEach(t => {
+    list.innerHTML += `<div class="tip-card"><span class="tip-icon">${t.icon}</span><div><div class="tip-title">${t.title}</div><div class="tip-text">${t.text}</div></div></div>`;
+  });
+  const road = document.getElementById('roadmapList');
+  ROADMAP.forEach((r, i) => {
+    road.innerHTML += `<div class="roadmap-item"><div class="roadmap-line"><div class="roadmap-dot" style="background:${r.color}"></div>${i<ROADMAP.length-1?'<div class="roadmap-connector"></div>':''}</div><div style="padding-bottom:8px"><div><span class="roadmap-phase" style="color:${r.color}">${r.phase}</span><span class="roadmap-badge" style="background:${r.color}22;color:${r.color}">${r.label}</span></div><div class="roadmap-desc">${r.desc}</div></div></div>`;
+  });
+}
+
+// Init
+buildWeekGrid();
+buildWorkoutCards();
+showMeal('weekday', document.querySelector('.sub-tab'));
+buildSupplements();
+buildTips();
+</script>
+
+</body>
+</html>
